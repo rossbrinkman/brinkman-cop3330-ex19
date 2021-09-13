@@ -33,8 +33,7 @@ public class App {
                 break;
             } catch (InputMismatchException ime) {
                 System.out.println("Invalid input. Must be a number: ");
-                scanner.next();
-            }
+                scanner.next();}
         }
 
         bMI = (weight / (height * height)) * 703;
