@@ -1,5 +1,6 @@
 package org.example;
 import java.text.DecimalFormat;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /*
@@ -7,52 +8,47 @@ import java.util.Scanner;
  *  Copyright 2021 Ross Brinkman
  */
 
-public class App 
-{
-    public static void main( String[] args )
-    {
-        DecimalFormat f = new DecimalFormat("#0.00####");
+public class App {
+    public static void main(String[] args) {
+        DecimalFormat f = new DecimalFormat("#0.#");
         Scanner scanner = new Scanner(System.in);
-        int maleOrFemale;
-        float ouncesAlcohol, weight, hoursSinceLastDrink, alcoholDistributionRatio, bloodAlcoholContent;
-        String currentInput;
+        float height, weight, bMI;
 
-        System.out.println( "Enter a 1 if you are male or a 2 if you are female: " );
-        currentInput = scanner.nextLine();
-        try{
-            maleOrFemale = Integer.parseInt(currentInput);}
-        catch (NumberFormatException nfe){
-            System.out.println( "Input must be numeric" );
-            return;
+        System.out.println("Enter your weight in pounds: ");
+
+        while (true) {
+            try {
+                weight = scanner.nextFloat();
+                break;
+            } catch (InputMismatchException ime) {
+                System.out.println("Invalid input. Must be a number: ");
+                scanner.next();
+            }
         }
 
-        if(maleOrFemale == 1)
-            alcoholDistributionRatio = 0.73f;
-        else if (maleOrFemale == 2)
-            alcoholDistributionRatio = 0.66f;
+        System.out.println("Now enter your height in inches (there are 12 inches in 1 foot): ");
+        while (true) {
+            try {
+                height = scanner.nextFloat();
+                break;
+            } catch (InputMismatchException ime) {
+                System.out.println("Invalid input. Must be a number: ");
+                scanner.next();
+            }
+        }
+
+        bMI = (weight / (height * height)) * 703;
+
+        if (bMI > 25)
+            System.out.println("Your BMI is " + f.format(bMI) + ".\n" +
+                    "You are overweight. Wow. Please see a doctor.");
+        else if (bMI < 18.5)
+            System.out.println("Your BMI is " + f.format(bMI) + ".\n" +
+                    "You are underweight. Please consult your local physician.");
         else
-        {
-            System.out.println( "Invalid Input" );
-            return;
-        }
-
-        System.out.println( "How many ounces of alcohol did you have? " );
-        ouncesAlcohol = scanner.nextFloat();
-
-        System.out.println( "What is your weight in pounds? " );
-        weight = scanner.nextFloat();
-
-        System.out.println( "How many hours has it been since your last drink? " );
-        hoursSinceLastDrink = scanner.nextFloat();
-
-        bloodAlcoholContent = (ouncesAlcohol * 5.14f / weight * alcoholDistributionRatio) - .015f * hoursSinceLastDrink;
-
-        System.out.println( "Your BAC is " + f.format(bloodAlcoholContent));
-
-        String endString = bloodAlcoholContent >= .08f ? "It is not legal for you to drive" : "It is legal for you to drive";
-
-        System.out.println(endString);
+            System.out.println("Your BMI is " + f.format(bMI) + ".\n" +
+                    "You are within the ideal weight range.");
 
         scanner.close();
+        }
     }
-}
